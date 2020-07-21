@@ -1,0 +1,23 @@
+version: "3"
+services: 
+  app:
+    restart: always
+    build: .
+#    command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/myblog
+    ports: 
+      - "80:8000"
+    depends_on: 
+      - db
+  db:
+    image: mysql:5.7
+    volumes: 
+      - "./maysql:/var/lib/mysql"
+    ports: 
+      - "3306:3306"
+    restart: always
+    environment: 
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=myblog
