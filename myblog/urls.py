@@ -1,4 +1,4 @@
-"""blog URL Configuration
+"""myblog URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -15,29 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 
-from apps.posts.views import PostsViewSet
-from apps.tag.views import TagViewSet
-from apps.category.views import CategoryViewSet
-from apps.user.views import UserViewSet
+from blog.views import PostViewSet, TagViewSet, CategoryViewSet
 
 router = routers.DefaultRouter()
 
-router.register(r'posts', PostsViewSet, basename='posts')
-
-router.register(r'tags', TagViewSet, basename='tags')
-
-router.register(r'categories', CategoryViewSet, basename='categories')
-
-router.register(r'users', UserViewSet, basename='users')
+router.register('post', PostViewSet, basename='post')
+router.register('category', CategoryViewSet, basename='category')
+router.register('tag', TagViewSet, basename='tag')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls')),
-    path('docs/', include_docs_urls(title='MyBlog'))
+    path('docs/', include_docs_urls(title='我的博客')),
 ]

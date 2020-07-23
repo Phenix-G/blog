@@ -4,12 +4,10 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-faker = "*"
 
 [packages]
-django = "==2.2.13"
 mysqlclient = "*"
-djangorestframework-jwt = "*"
+django = "==2.2.13"
 djangorestframework = "*"
 coreapi = "*"
 
