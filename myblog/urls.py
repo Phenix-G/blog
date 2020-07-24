@@ -28,6 +28,6 @@ router.register('tag', TagViewSet, basename='tag')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path('docs/', include_docs_urls(title='我的博客')),
 ]
