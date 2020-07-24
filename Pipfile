@@ -4,12 +4,14 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+faker = "*"
 
 [packages]
 mysqlclient = "*"
 django = "==2.2.13"
 djangorestframework = "*"
 coreapi = "*"
+django-filter = "*"
 
 [requires]
 python_version = "3.7"

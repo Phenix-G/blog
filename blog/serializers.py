@@ -21,7 +21,7 @@ class PostListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        exclude = 'content'
+        exclude = ['content']
 
 
 class PostRetrieveSerializer(serializers.ModelSerializer):

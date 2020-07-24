@@ -24,7 +24,7 @@ class Tag(models.Model):
 class Post(models.Model):
     title = models.CharField('标题', max_length=50)
     created_time = models.DateTimeField('发布时间', auto_now_add=True)
-    look = models.IntegerField('阅读数', default=0, editable=False)
+    look = models.PositiveIntegerField('阅读数', default=0, editable=False)
     excerpt = models.CharField('摘录', max_length=200)
     content = models.TextField('文章内容')
     # navigation = models.CharField('导航',max_length=50)

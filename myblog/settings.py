@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'blog',
     'user',
     'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -131,5 +132,9 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
 
     # AttributeError: 'AutoSchema' object has no attribute 'get_link'
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
+    
+    # 过滤器
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+
 }
