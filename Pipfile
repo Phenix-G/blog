@@ -12,6 +12,7 @@ django = "==2.2.13"
 djangorestframework = "*"
 coreapi = "*"
 django-filter = "*"
+djangorestframework-jwt = "*"
 
 [requires]
 python_version = "3.7"

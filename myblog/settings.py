@@ -127,14 +127,42 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
 # drf 配置
 REST_FRAMEWORK = {
 
     # AttributeError: 'AutoSchema' object has no attribute 'get_link'
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
-    
-    # 过滤器
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+
+    'PAGE_SIZE': 10,
+
+    # 过滤器
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+
+    # 权限
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+
+    # 身份认证
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+
+    ),
 }
+# JWT的过期时间
+import datetime
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'Token',
+}
+
+# 登录
+AUTHENTICATION_BACKENDS = (
+    'user.views.CustomBackend',
+)

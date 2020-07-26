@@ -13,7 +13,7 @@ class PostViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.Gen
     """
     queryset = Post.objects.all()
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
-    filter_fields = ('category', 'tag',)
+    filterset_fields = ('category', 'tag',)
     ordering_fields = ('created_time',)
     search_fields = ['title', 'content', 'excerpt']
 
