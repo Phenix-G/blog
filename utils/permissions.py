@@ -1,13 +1,18 @@
-# from rest_framework import permissions
-# from user.models import User
-#
-#
-# class UserPermission(permissions.BasePermission):
-#     """
-#     对列入黑名单的IP进行全局权限检查。
-#     """
-#
-#     def has_permission(self, request, view):
-#         username = request.META['username']
-#         blacklisted = User.objects.filter(username=username).exists()
-#         return blacklisted
+from rest_framework import permissions
+
+
+# 是否是当前用户
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    Assumes the model instance has an `owner` attribute.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Instance must have an attribute named `owner`.
+        return obj.user == request.user

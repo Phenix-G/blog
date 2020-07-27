@@ -1,13 +1,15 @@
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from rest_framework import mixins, viewsets, status
-from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .models import User
-from .serializers import UserDetailSerializer, UserRegSerializer
+from .serializers import UserDetailSerializer, UserRegisterSerializer
+
+from utils.permissions import IsOwnerOrReadOnly
 
 
 class CustomBackend(ModelBackend):
@@ -18,7 +20,7 @@ class CustomBackend(ModelBackend):
 
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
-            user = User.objects.get(Q(username=username) | Q(phone=username))
+            user = User.objects.get(Q(phone=username) | Q(email=username))
             if user.check_password(password):
                 return user
         except Exception as e:
@@ -26,25 +28,9 @@ class CustomBackend(ModelBackend):
 
 
 #
-class UserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    # def get_queryset(self):
-    #     return User.objects.filter(username=self.request.user.username)
-    #
-    # def get_serializer_class(self):
-    #     if self.action == 'retrieve':
-    #         return UserDetailSerializer
-    #     elif self.action == 'create':
-    #         return UserRegSerializer
-    #     return UserRegSerializer
-    #
-    # def get_permissions(self):
-    #     if self.action == 'retrieve':
-    #         return [IsAuthenticated()]
-    #     elif self.action == 'create':
-    #         return []
-    #     return []
+class UserRegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
-    serializer_class = UserRegSerializer
+    serializer_class = UserRegisterSerializer
 
     # 用户注册并登录
     def create(self, request, *args, **kwargs):
@@ -61,3 +47,12 @@ class UserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
     def perform_create(self, serializer):
         return serializer.save()
+
+
+class UserViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    serializer_class = UserDetailSerializer
+    authentication_classes = (JSONWebTokenAuthentication,)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+
+    def get_queryset(self):
+        return User.objects.filter(username=self.request.user.username)
