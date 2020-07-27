@@ -23,6 +23,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
 class UserRegSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True, label='用户名', help_text='用户名', max_length=10,
+                                     validators=[UniqueValidator(queryset=User.objects.all(), message='用户名已存在')]
                                      )
 
     password = serializers.CharField(
@@ -38,4 +39,4 @@ class UserRegSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username", 'password')
+        fields = ("username", 'password', 'phone')
