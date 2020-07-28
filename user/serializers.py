@@ -5,6 +5,9 @@ from .models import User
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
+    """
+    用户详情序列化类
+    """
     # def update(self, instance, validated_data):
     #     """更新，instance为要更新的对象实例"""
     #     instance.email = validated_data.get('email', instance.email)

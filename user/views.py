@@ -27,10 +27,38 @@ class CustomBackend(ModelBackend):
             return None
 
 
-#
-class UserRegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserRegisterSerializer
+class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """
+    用户
+    retrieve:
+            用户个人信息
+    create:
+            用户注册
+    update:
+            用户个人资料修改
+    """
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    def get_queryset(self):
+        if self.action == 'retrieve':
+            return User.objects.filter(username=self.request.user.username)
+        elif self.action == 'create':
+            return User.objects.all()
+        return User.objects.filter(username=self.request.user.username)
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return UserDetailSerializer
+        elif self.action == 'create':
+            return UserRegisterSerializer
+        return UserDetailSerializer
+
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            return [IsAuthenticated(), IsOwnerOrReadOnly()]
+        elif self.action == 'create':
+            return []
+        return []
 
     # 用户注册并登录
     def create(self, request, *args, **kwargs):
@@ -48,11 +76,6 @@ class UserRegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     def perform_create(self, serializer):
         return serializer.save()
 
-
-class UserViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    serializer_class = UserDetailSerializer
-    authentication_classes = (JSONWebTokenAuthentication,)
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-
-    def get_queryset(self):
-        return User.objects.filter(username=self.request.user.username)
+    # 返回当前用户 /user/{id} id可以是任意值
+    def get_object(self):
+        return self.request.user

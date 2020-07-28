@@ -7,7 +7,5 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     avatar = models.IntegerField(default=0)
 
-    # USERNAME_FIELD = 'phone'
-
     class Meta:
         db_table = 'user'
