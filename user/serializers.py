@@ -14,13 +14,21 @@ class UserDetailSerializer(serializers.ModelSerializer):
     #     instance.phone = validated_data.get('phone', instance.phone)
     #     instance.save()
     #     return instance
+    username = serializers.CharField(required=False, allow_blank=False, label='用户名',
+                                     validators=[UniqueValidator(queryset=User.objects.all(), message='用户名已存在')])
+    # phone = serializers.CharField(required=False, label='手机号码', help_text='手机号码', max_length=11, min_length=11,
+    #                               validators=[UniqueValidator(queryset=User.objects.all(), message='手机号码已存在')]
+    #                               )
+    email = serializers.EmailField(required=False, label='邮箱', help_text='邮箱',
+                                   validators=[UniqueValidator(queryset=User.objects.all(), message='邮箱已存在')]
+                                   )
 
     class Meta:
         model = User
         fields = [
             'username',
             'email',
-            'phone'
+            'email'
         ]
 
 
@@ -28,10 +36,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True, label='用户名', help_text='用户名', max_length=10,
                                      validators=[UniqueValidator(queryset=User.objects.all(), message='用户名已存在')]
                                      )
-    phone = serializers.CharField(required=True, label='手机号码', help_text='手机号码', max_length=11, min_length=11,
-                                  validators=[UniqueValidator(queryset=User.objects.all(), message='手机号码已存在')]
-                                  )
+    # phone = serializers.CharField(required=True, label='手机号码', help_text='手机号码', max_length=11, min_length=11,
+    #                               validators=[UniqueValidator(queryset=User.objects.all(), message='手机号码已存在')]
+    #                               )
 
+    email = serializers.EmailField(required=False, label='邮箱', help_text='邮箱',
+                                   validators=[UniqueValidator(queryset=User.objects.all(), message='邮箱已存在')]
+                                   )
     password = serializers.CharField(
         label='密码', help_text='密码', write_only=True,
     )
@@ -45,4 +56,4 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username", 'password', 'phone')
+        fields = ("username", 'password', 'email')

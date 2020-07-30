@@ -1,9 +1,17 @@
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
+
 from .models import Post, Category, Tag
 from .serializers import PostRetrieveSerializer, PostListSerializer, CategorySerializer, TagSerializer
+
+
+class PostPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 20
 
 
 class PostViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -12,6 +20,7 @@ class PostViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.Gen
     retrieve:文章详情
     """
     queryset = Post.objects.all()
+    pagination_class = PostPagination
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filterset_fields = ('category', 'tag',)
     ordering_fields = ('created_time',)

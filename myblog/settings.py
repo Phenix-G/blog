@@ -133,9 +133,9 @@ REST_FRAMEWORK = {
     # AttributeError: 'AutoSchema' object has no attribute 'get_link'
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
 
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-
-    'PAGE_SIZE': 10,
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    #
+    # 'PAGE_SIZE': 10,
 
     # 过滤器
     'DEFAULT_FILTER_BACKENDS': (
@@ -151,7 +151,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
 
     ),
 }
