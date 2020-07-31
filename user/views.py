@@ -1,14 +1,16 @@
-from rest_framework.views import APIView
 from django.conf import settings
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
+from django.contrib.auth.backends import ModelBackend
+
+from rest_framework.views import APIView
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from itsdangerous import TimedJSONWebSignatureSerializer
 
+from utils.email import send_register_active_email
 from .models import User
 from .serializers import UserDetailSerializer, UserEmailRegisterSerializer
 
@@ -85,20 +87,20 @@ class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Upd
 
 
 # 激活邮箱
-class EmailVariyView(APIView):
+class EmailActiveView(APIView):
     permission_classes = []
     authentication_classes = []
 
     def get(self, request, token):
         # 进行解密,获取要激活的用户信息
-        serializer = Serializer(settings.SECRET_KEY, 5 * 60)
+        serializer = TimedJSONWebSignatureSerializer(settings.SECRET_KEY, 5 * 60)
         token = token.split('/')[-1]
         try:
             info = serializer.loads(token)
             # 获取待激活用户的ID
-            username = info['confirm']
+            email = info['confirm']
             # 根据用户名获取用户信息
-            user = User.objects.filter(username=username)[0]
+            user = User.objects.filter(email=email)[0]
             user.is_active = 1
             user.save()
             # 跳转到登录页面
@@ -106,3 +108,20 @@ class EmailVariyView(APIView):
             # 激活链接已过期
             return Response('激活链接已过期', status=status.HTTP_400_BAD_REQUEST)
         return Response('用户已激活', status=status.HTTP_200_OK)
+
+
+class ExpireEmailActiveView(APIView):
+    permission_classes = []
+    authentication_classes = []
+
+    def post(self, request):
+        email = request.POST.get('email')
+        existed = User.objects.filter(email=email).count()
+        if existed:
+            if User.objects.filter(email=email)[0].is_active:
+                return Response('邮箱已激活', status=status.HTTP_400_BAD_REQUEST)
+            else:
+                send_register_active_email(email)
+                return Response('激活邮件已发送到你的邮箱,请在5分钟内激活账号', status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)

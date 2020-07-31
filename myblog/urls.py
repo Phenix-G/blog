@@ -20,7 +20,7 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_jwt.views import obtain_jwt_token
 
 from blog.views import PostViewSet, TagViewSet, CategoryViewSet
-from user.views import UserViewSet, EmailVariyView
+from user.views import UserViewSet, ExpireEmailActiveView, EmailActiveView
 
 router = routers.DefaultRouter()
 
@@ -35,5 +35,6 @@ urlpatterns = [
     path('docs/', include_docs_urls(title='我的博客')),
     path('api-auth/', include('rest_framework.urls')),
     re_path(r'^login/', obtain_jwt_token),
-    re_path('active/(?P<token>.*)$', EmailVariyView.as_view()),  # 用户激活
+    re_path(r'^active/(?P<token>.*)$', EmailActiveView.as_view()),  # 用户激活
+    path('email_active/', ExpireEmailActiveView.as_view()),  # 邮箱过期激活
 ]
