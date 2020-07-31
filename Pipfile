@@ -13,6 +13,7 @@ djangorestframework = "*"
 coreapi = "*"
 django-filter = "*"
 djangorestframework-jwt = "*"
+itsdangerous = "*"
 
 [requires]
 python_version = "3.7"

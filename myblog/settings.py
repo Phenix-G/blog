@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -166,3 +166,16 @@ JWT_AUTH = {
 AUTHENTICATION_BACKENDS = (
     'user.views.CustomBackend',
 )
+
+# 邮箱正则表达式
+REGEX_EMAIL = r'^([\w]+\.*)([\w]+)\@[\w]+\.\w{3}(\.\w{2}|)$'
+
+# 发送邮件配置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+# 发送邮件的邮箱
+EMAIL_HOST_USER = 'chris_guoc@163.com'
+EMAIL_HOST_PASSWORD = 'XFNNSUJCHAHMPCIW'
+# 收件人看到的发件人
+EMAIL_FROM = 'Python-django<chris_guoc@163.com>'
