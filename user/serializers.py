@@ -69,16 +69,24 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
 class UserEmailRegisterSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, label='用户名', help_text='用户名', max_length=15,
-                                     validators=[UniqueValidator(queryset=User.objects.all(), message='邮箱已存在')]
+                                     validators=[UniqueValidator(queryset=User.objects.all(), message='用户名已存在')]
                                      )
 
     email = serializers.EmailField(required=True, label='邮箱', help_text='邮箱',
-                                   validators=[UniqueValidator(queryset=User.objects.all(), message='邮箱已存在')]
+                                   # validators=[UniqueValidator(queryset=User.objects.all(), message='邮箱已存在')]
                                    )
 
     password = serializers.CharField(required=True, label='密码', help_text='密码', write_only=True)
+    check_password = serializers.CharField(required=True, label='确认密码', help_text='确认密码', write_only=True)
 
-    def validated_email(self, email):
+    def validate(self, attrs):
+        password = attrs['password']
+        check_password = attrs['check_password']
+        if password != check_password:
+            raise serializers.ValidationError('密码不一致')
+        return attrs
+
+    def validate_email(self, email):
         """
         验证邮箱
         :param email:
@@ -107,7 +115,7 @@ class UserEmailRegisterSerializer(serializers.Serializer):
         # 设置用户密码
         user.set_password(password)
         user.save()
-        # 生成激活连接
 
+        # 发送邮箱激活邮件
         send_register_active_email(email)
         return user

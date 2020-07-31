@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -176,6 +176,6 @@ EMAIL_HOST = 'smtp.163.com'
 EMAIL_PORT = 25
 # 发送邮件的邮箱
 EMAIL_HOST_USER = 'chris_guoc@163.com'
-EMAIL_HOST_PASSWORD = 'XFNNSUJCHAHMPCIW'
+EMAIL_HOST_PASSWORD = 'IIPXCHVYYTYSZCON'
 # 收件人看到的发件人
 EMAIL_FROM = 'Python-django<chris_guoc@163.com>'

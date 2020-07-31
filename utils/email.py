@@ -24,4 +24,4 @@ def send_register_active_email(email):
     # html结构的信息，其中包含了加密后的用户信息token
     html_message = '<a href=' + url + '>' + url + '</a>'
     # 调用Django发送邮件的方法，这里传了5个参数
-    send_mail(subject, message, sender, receiver, html_message=html_message)
+    send_mail(subject=subject, message=message, from_email=sender, recipient_list=receiver, html_message=html_message)
