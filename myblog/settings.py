@@ -172,8 +172,9 @@ REGEX_EMAIL = r'^([\w]+\.*)([\w]+)\@[\w]+\.\w{3}(\.\w{2}|)$'
 
 # 发送邮件配置
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.163.com'
-EMAIL_PORT = 25
+EMAIL_PORT = 465
 # 发送邮件的邮箱
 EMAIL_HOST_USER = 'chris_guoc@163.com'
 EMAIL_HOST_PASSWORD = 'IIPXCHVYYTYSZCON'

@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from itsdangerous import TimedJSONWebSignatureSerializer
+from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 
 from utils.email import send_register_active_email
 from .models import User
@@ -98,13 +98,13 @@ class EmailActiveView(APIView):
         try:
             info = serializer.loads(token)
             # 获取待激活用户的ID
-            email = info['confirm']
+            email = info['confirm'][18:]
             # 根据用户名获取用户信息
             user = User.objects.filter(email=email)[0]
             user.is_active = 1
             user.save()
             # 跳转到登录页面
-        except Exception as e:
+        except SignatureExpired:
             # 激活链接已过期
             return Response('激活链接已过期', status=status.HTTP_400_BAD_REQUEST)
         return Response('用户已激活', status=status.HTTP_200_OK)

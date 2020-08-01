@@ -1,11 +1,17 @@
+from random import randint
+from time import strftime
+
 from django.conf import settings
 from django.core.mail import send_mail
 from itsdangerous import TimedJSONWebSignatureSerializer
 
 
 def send_register_active_email(email):
+    random = randint(1000, 9999)
     serializer = TimedJSONWebSignatureSerializer(settings.SECRET_KEY, 5 * 60)
-    info = {'confirm': email}
+    info = {
+        'confirm': str(random) + strftime("%Y%m%d%H%M%S") + email,
+    }
     token = serializer.dumps(info)
     token = token.decode('utf8')
 
