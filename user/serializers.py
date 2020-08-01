@@ -15,28 +15,32 @@ class UserDetailSerializer(serializers.ModelSerializer):
     """
     用户详情序列化类
     """
-    # def update(self, instance, validated_data):
-    #     """更新，instance为要更新的对象实例"""
-    #     instance.email = validated_data.get('email', instance.email)
-    #     instance.phone = validated_data.get('phone', instance.phone)
-    #     instance.save()
-    #     return instance
-    username = serializers.CharField(required=False, allow_blank=False, label='用户名',
-                                     validators=[UniqueValidator(queryset=User.objects.all(), message='用户名已存在')])
-    # phone = serializers.CharField(required=False, label='手机号码', help_text='手机号码', max_length=11, min_length=11,
-    #                               validators=[UniqueValidator(queryset=User.objects.all(), message='手机号码已存在')]
-    #                               )
-    email = serializers.EmailField(required=False, label='邮箱', help_text='邮箱',
-                                   validators=[UniqueValidator(queryset=User.objects.all(), message='邮箱已存在')]
-                                   )
+    username = serializers.CharField(required=False, label='密码', help_text='密码', read_only=True)
+
+    email = serializers.EmailField(required=False, label='邮箱', help_text='邮箱', read_only=True)
+
+    password = serializers.CharField(required=True, label='密码', help_text='密码', write_only=True)
+    check_password = serializers.CharField(required=True, label='确认密码', help_text='确认密码', write_only=True)
+
+    def update(self, instance, validated_data):
+        """更新，instance为要更新的对象实例"""
+        password = validated_data.get('password', instance.password)
+        check_password = validated_data.get('check_password', instance.check_password)
+
+        if password == check_password:
+            instance.set_password(password)
+            instance.save()
+        else:
+            raise serializers.ValidationError('密码不一致')
+        return instance
 
     class Meta:
         model = User
         fields = [
             'username',
             'email',
-            'email',
-            'is_active'
+            'password',
+            'check_password'
         ]
 
 
@@ -115,7 +119,6 @@ class UserEmailRegisterSerializer(serializers.Serializer):
         # 设置用户密码
         user.set_password(password)
         user.save()
-
         # 发送邮箱激活邮件
         send_register_active_email(email)
         return user
