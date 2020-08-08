@@ -14,6 +14,7 @@ coreapi = "*"
 django-filter = "*"
 djangorestframework-jwt = "*"
 itsdangerous = "*"
+uvicorn = "*"
 
 [requires]
 python_version = "3.7"
