@@ -16,6 +16,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class PostListSerializer(serializers.ModelSerializer):
+    created_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M:%S')
     category = CategorySerializer()
     tag = TagSerializer(many=True)
 
@@ -25,6 +26,7 @@ class PostListSerializer(serializers.ModelSerializer):
 
 
 class PostRetrieveSerializer(serializers.ModelSerializer):
+    created_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M:%S')
     category = CategorySerializer()
     tag = TagSerializer(many=True)
 
