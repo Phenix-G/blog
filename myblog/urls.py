@@ -20,14 +20,15 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_jwt.views import obtain_jwt_token
 
 from blog.views import PostViewSet, TagViewSet, CategoryViewSet
-from user.views import UserViewSet, ExpireEmailActiveView, EmailActiveView
+from user.views import UserViewSet, ExpireEmailActiveView, EmailActiveView, CommentViewSet
 
 router = routers.DefaultRouter()
 
-router.register('posts', PostViewSet, basename='post')
-router.register('categorys', CategoryViewSet, basename='category')
-router.register('tags', TagViewSet, basename='tag')
-router.register('users', UserViewSet, basename='users')
+router.register(r'posts', PostViewSet, basename='post')
+router.register(r'categorys', CategoryViewSet, basename='category')
+router.register(r'tags', TagViewSet, basename='tag')
+router.register(r'users', UserViewSet, basename='users')
+router.register(r'comments', CommentViewSet, basename='comment')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

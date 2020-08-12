@@ -12,8 +12,8 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 
 from utils.email import send_register_active_email
-from .models import User
-from .serializers import UserDetailSerializer, UserEmailRegisterSerializer
+from .models import User, Comment
+from .serializers import UserDetailSerializer, UserEmailRegisterSerializer, CommentSerializer
 
 from utils.permissions import IsOwnerOrReadOnly
 
@@ -111,6 +111,7 @@ class EmailActiveView(APIView):
         return Response('用户已激活', status=status.HTTP_200_OK)
 
 
+# 过期邮箱激活
 class ExpireEmailActiveView(APIView):
     permission_classes = []
     authentication_classes = []
@@ -126,3 +127,15 @@ class ExpireEmailActiveView(APIView):
                 return Response('激活邮件已发送到你的邮箱,请在5分钟内激活账号', status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# 评论
+class CommentViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
+    authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication, BasicAuthentication]
+
+    # 这里用了get_queryset来指定queryset 那么我们上面的query_set可以省略不写, 但是前提是在注册路由是需要加个base_name
+    def get_queryset(self):
+        # self.request.user 当前用户
+        return Comment.objects.filter(user=self.request.user)

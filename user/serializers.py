@@ -7,7 +7,9 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from itsdangerous import TimedJSONWebSignatureSerializer
 
-from .models import User
+from blog.serializers import PostListSerializer, PostRetrieveSerializer
+from .models import User, Comment
+from blog.models import Post
 from utils.email import send_register_active_email
 
 
@@ -84,6 +86,11 @@ class UserEmailRegisterSerializer(serializers.Serializer):
     check_password = serializers.CharField(required=True, label='确认密码', help_text='确认密码', write_only=True)
 
     def validate(self, attrs):
+        """
+         整体验证
+        :param attrs:
+        :return:
+        """
         password = attrs['password']
         check_password = attrs['check_password']
         if password != check_password:
@@ -122,3 +129,29 @@ class UserEmailRegisterSerializer(serializers.Serializer):
         # 发送邮箱激活邮件
         send_register_active_email(email)
         return user
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    # 获取当前用户
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    username = serializers.ReadOnlyField(source='user.username')
+    post_title = serializers.ReadOnlyField(source='post.title')
+    # 只返回时间不提交
+    created_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M:%S')
+
+    class Meta:
+        model = Comment
+        fields = [
+            'user',
+            'username',
+            'post',
+            'post_title',
+            'text',
+            'created_time'
+        ]
+        # read_only_fields = [
+        #     "created_time",
+        # ]
+        # extra_kwargs = {"post": {"write_only": True}}

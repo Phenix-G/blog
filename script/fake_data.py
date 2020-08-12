@@ -16,11 +16,11 @@ from blog.models import Category, Post, Tag
 
 faker = Faker('zh-CN')
 
-# for i in range(10):
-#     category = Category.objects.create(name=faker.word())
-#     tag = faker.words()
-#     for j in tag:
-#         Tag.objects.create(name=j)
+for i in range(10):
+    category = Category.objects.create(name=faker.word())
+    tag = faker.words()
+    for j in tag:
+        Tag.objects.create(name=j)
 
 for i in range(20):
     title = faker.word()
