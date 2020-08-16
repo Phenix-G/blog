@@ -7,13 +7,14 @@ verify_ssl = true
 faker = "*"
 
 [packages]
+django = "*"
 mysqlclient = "*"
-django = "==2.2.13"
 djangorestframework = "*"
-coreapi = "*"
+markdown = "*"
 django-filter = "*"
 djangorestframework-jwt = "*"
 itsdangerous = "*"
+coreapi = "*"
 uvicorn = "*"
 
 [requires]
