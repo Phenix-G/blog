@@ -21,7 +21,7 @@ from utils.permissions import IsOwnerOrReadOnly
 class CustomBackend(ModelBackend):
     """
     自定义用户验证:
-        用户名登录 手机号登录
+        邮箱登录
     """
 
     def authenticate(self, request, username=None, password=None, **kwargs):
