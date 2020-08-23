@@ -33,7 +33,7 @@ AUTH_USER_MODEL = 'user.User'
 # Application definition
 
 INSTALLED_APPS = [
-    # 'simpleui',
+    'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
