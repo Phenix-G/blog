@@ -15,3 +15,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+# gunicorn example:app -w 4 -k uvicorn.workers.UvicornWorker
+# gunicorn myblog.asgi:application -w 4 -k uvicorn.workers.UvicornWorker
+# gunicorn -w 4 -k uvicorn.workers.UvicornH11Worker

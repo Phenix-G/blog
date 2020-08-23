@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a35c4aa9b7fa427ee1f35e59b593b8c5ea980495db7823ef587c1762db39d795"
+            "sha256": "74cc5e0b07c06e25d876a2ae7e479cf10a16ff21ea2d7fdf49e340ece9e59dcd"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -77,6 +77,20 @@
             "index": "pypi",
             "version": "==2.3.0"
         },
+        "django-mdeditor": {
+            "hashes": [
+                "sha256:7b44a25d46d4f37e6315e45e0836e73ff612267c5dcc28b2eda06a0f086ec436"
+            ],
+            "index": "pypi",
+            "version": "==0.1.18"
+        },
+        "django-simpleui": {
+            "hashes": [
+                "sha256:591f2e713a9302fb7531bfce3d8632072810f8a7993d6d7283a4b11c12b49253"
+            ],
+            "index": "pypi",
+            "version": "==2020.7"
+        },
         "djangorestframework": {
             "hashes": [
                 "sha256:6dd02d5a4bd2516fb93f80360673bf540c3b6641fec8766b1da2870a5aa00b32",
@@ -92,6 +106,14 @@
             ],
             "index": "pypi",
             "version": "==1.11.0"
+        },
+        "gunicorn": {
+            "hashes": [
+                "sha256:1904bb2b8a43658807108d59c3f3d56c2b6121a701161de0ddf9ad140073c626",
+                "sha256:cd4a810dd51bf497552cf3f863b575dabd73d6ad6a91075b65936b151cbf4f9c"
+            ],
+            "index": "pypi",
+            "version": "==20.0.4"
         },
         "h11": {
             "hashes": [
@@ -290,11 +312,11 @@
     "develop": {
         "faker": {
             "hashes": [
-                "sha256:1290f589648bc470b8d98fff1fdff773fe3f46b4ca2cac73ac74668b12cf008e",
-                "sha256:c006b3664c270a2cfd4785c5e41ff263d48101c4e920b5961cf9c237131d8418"
+                "sha256:bc4b8c908dfcd84e4fe5d9fa2e52fbe17546515fb8f126909b98c47badf05658",
+                "sha256:ff188c416864e3f7d8becd8f9ee683a4b4101a2a2d2bcdcb3e84bb1bdd06eaae"
             ],
             "index": "pypi",
-            "version": "==4.1.1"
+            "version": "==4.1.2"
         },
         "python-dateutil": {
             "hashes": [

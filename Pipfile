@@ -16,6 +16,9 @@ djangorestframework-jwt = "*"
 itsdangerous = "*"
 coreapi = "*"
 uvicorn = "*"
+django-mdeditor = "*"
+gunicorn = "*"
+django-simpleui = "*"
 
 [requires]
 python_version = "3.7"
