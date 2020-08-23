@@ -1,3 +1,4 @@
+import random
 from django.conf import settings
 from django.db.models import Q
 from django.contrib.auth.backends import ModelBackend
@@ -11,7 +12,7 @@ from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handl
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 
-from utils.email import send_register_active_email
+from utils.email import send_register_active_email, send_reset_password_email
 from .models import User, Comment
 from .serializers import UserDetailSerializer, UserEmailRegisterSerializer, CommentSerializer
 
@@ -127,6 +128,25 @@ class ExpireEmailActiveView(APIView):
                 return Response('激活邮件已发送到你的邮箱,请在5分钟内激活账号', status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# 重置密码
+class ResetPassword(APIView):
+    permission_classes = []
+    authentication_classes = []
+
+    def post(self, request):
+        email = request.POST.get('email')
+        existed = User.objects.filter(email=email).count()
+        if existed:
+            user = User.objects.filter(email=email)[0]
+            if user.is_active:
+                user.set_password(send_reset_password_email(email))
+                user.save()
+                return Response('重置密码已发送到你的邮箱', status=status.HTTP_200_OK)
+            else:
+                return Response('账号未激活', status=status.HTTP_400_BAD_REQUEST)
+        return Response('账号不存在', status=status.HTTP_400_BAD_REQUEST)
 
 
 # 评论

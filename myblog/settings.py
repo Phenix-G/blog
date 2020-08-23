@@ -181,4 +181,4 @@ EMAIL_PORT = 465
 EMAIL_HOST_USER = 'chris_guoc@163.com'
 EMAIL_HOST_PASSWORD = 'IIPXCHVYYTYSZCON'
 # 收件人看到的发件人
-EMAIL_FROM = 'Python-django<chris_guoc@163.com>'
+EMAIL_FROM = 'Chris Blog <chris_guoc@163.com>'
