@@ -31,9 +31,11 @@ class PostViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.Gen
     # 文章阅读数
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        print(instance)
+        # print(instance)
         instance.increase_views()
         serializer = self.get_serializer(instance)
+        # print(serializer)
+        print(serializer.data['content'])
         return Response(serializer.data)
 
     def get_serializer_class(self):
