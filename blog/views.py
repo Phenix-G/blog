@@ -7,7 +7,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from user.serializers import CommentSerializer
 from .models import Post, Category, Tag
-from .serializers import PostRetrieveSerializer, PostListSerializer, CategorySerializer, TagSerializer
+from .serializers import PostRetrieveSerializer, PostListSerializer, CategorySerializer, TagSerializer, \
+    CategoryRetrieveSerializer
 
 
 class PostPagination(PageNumberPagination):
@@ -65,6 +66,14 @@ class PostViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.Gen
 class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = []
+    authentication_classes = []
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return CategorySerializer
+        if self.action == 'retrieve':
+            return CategoryRetrieveSerializer
 
 
 class TagViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
