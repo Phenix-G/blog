@@ -2,8 +2,10 @@ import random
 from django.conf import settings
 from django.db.models import Q
 from django.contrib.auth.backends import ModelBackend
+from django.views import View
 
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView, UpdateAPIView
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -14,7 +16,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 
 from utils.email import send_register_active_email, send_reset_password_email
 from .models import User, Comment
-from .serializers import UserDetailSerializer, UserEmailRegisterSerializer, CommentSerializer
+from .serializers import UserDetailSerializer, UserEmailRegisterSerializer, CommentSerializer, ResetPasswordSerializer
 
 from utils.permissions import IsOwnerOrReadOnly
 
@@ -131,22 +133,18 @@ class ExpireEmailActiveView(APIView):
 
 
 # 重置密码
-class ResetPassword(APIView):
-    permission_classes = []
-    authentication_classes = []
+class ResetPassWord(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = ResetPasswordSerializer
 
-    def post(self, request):
-        email = request.POST.get('email')
-        existed = User.objects.filter(email=email).count()
-        if existed:
-            user = User.objects.filter(email=email)[0]
-            if user.is_active:
-                user.set_password(send_reset_password_email(email))
-                user.save()
-                return Response('重置密码已发送到你的邮箱', status=status.HTTP_200_OK)
-            else:
-                return Response('账号未激活', status=status.HTTP_400_BAD_REQUEST)
-        return Response('账号不存在', status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response('密码已发送到邮箱', status=status.HTTP_200_OK)
+
+    def perform_create(self, serializer):
+        serializer.save()
 
 
 # 评论

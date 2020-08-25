@@ -1,4 +1,5 @@
 import re
+from abc import ABC
 from datetime import datetime, timedelta
 
 from django.core.mail import send_mail
@@ -10,7 +11,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer
 from blog.serializers import PostListSerializer, PostRetrieveSerializer
 from .models import User, Comment
 from blog.models import Post
-from utils.email import send_register_active_email
+from utils.email import send_register_active_email, send_reset_password_email
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -127,7 +128,36 @@ class UserEmailRegisterSerializer(serializers.Serializer):
         user.set_password(password)
         user.save()
         # 发送邮箱激活邮件
-        send_register_active_email(email)
+        # send_register_active_email(email)
+        return user
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, email):
+        """
+        验证邮箱
+        :param email:
+        :return:
+        """
+        # 验证邮箱是否合法
+        if not re.match(settings.REGEX_EMAIL, email):
+            raise serializers.ValidationError('邮箱无效')
+
+        # 邮箱是否注册
+        if User.objects.filter(email=email):
+            return email
+        else:
+            raise serializers.ValidationError('用户不存在')
+
+    def create(self, validated_data):
+        email = validated_data['email']
+        user = User.objects.get(email=email)
+
+        # 发送重置密码邮件 设置用户密码
+        user.set_password(send_reset_password_email(email))
+        user.save()
         return user
 
 

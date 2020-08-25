@@ -21,7 +21,7 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_jwt.views import obtain_jwt_token
 
 from blog.views import PostViewSet, TagViewSet, CategoryViewSet
-from user.views import UserViewSet, ExpireEmailActiveView, EmailActiveView, ResetPassword, CommentViewSet
+from user.views import UserViewSet, ExpireEmailActiveView, EmailActiveView, CommentViewSet, ResetPassWord
 
 router = routers.DefaultRouter()
 
@@ -30,6 +30,7 @@ router.register(r'categorys', CategoryViewSet, basename='category')
 router.register(r'tags', TagViewSet, basename='tag')
 router.register(r'users', UserViewSet, basename='users')
 router.register(r'comments', CommentViewSet, basename='comment')
+router.register(r'password', ResetPassWord, basename='password')  # 重置密码
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,5 +40,4 @@ urlpatterns = [
     re_path(r'^login/', obtain_jwt_token),
     re_path(r'^active/(?P<token>.*)$', EmailActiveView.as_view()),  # 用户激活
     path('email_active/', ExpireEmailActiveView.as_view()),  # 邮箱过期激活
-    path('reset_password/', ResetPassword.as_view())  # 重置密码
 ]
