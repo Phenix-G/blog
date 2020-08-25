@@ -1,11 +1,8 @@
-import random
 from django.conf import settings
 from django.db.models import Q
 from django.contrib.auth.backends import ModelBackend
-from django.views import View
 
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, UpdateAPIView
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -14,7 +11,7 @@ from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handl
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 
-from utils.email import send_register_active_email, send_reset_password_email
+from utils.email import send_register_active_email
 from .models import User, Comment
 from .serializers import UserDetailSerializer, UserEmailRegisterSerializer, CommentSerializer, ResetPasswordSerializer
 
@@ -36,6 +33,7 @@ class CustomBackend(ModelBackend):
             return None
 
 
+# 用户
 class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     用户
@@ -80,7 +78,7 @@ class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Upd
         # re_dict['name'] = user.username
 
         headers = self.get_success_headers(serializer.data)
-        return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
+        return Response('激活邮件已发送到邮箱', status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         return serializer.save()
@@ -134,6 +132,10 @@ class ExpireEmailActiveView(APIView):
 
 # 重置密码
 class ResetPassWord(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    create:
+    重置密码
+    """
     queryset = User.objects.all()
     serializer_class = ResetPasswordSerializer
 
@@ -149,6 +151,10 @@ class ResetPassWord(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 # 评论
 class CommentViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    create:
+    发表评论
+    """
     serializer_class = CommentSerializer
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
     authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication, BasicAuthentication]
