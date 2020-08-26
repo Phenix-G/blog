@@ -157,7 +157,7 @@ class CommentViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
     serializer_class = CommentSerializer
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication, BasicAuthentication]
+    authentication_classes = [JSONWebTokenAuthentication, ]
 
     # 这里用了get_queryset来指定queryset 那么我们上面的query_set可以省略不写, 但是前提是在注册路由是需要加个base_name
     def get_queryset(self):
