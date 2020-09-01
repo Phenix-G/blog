@@ -128,7 +128,37 @@ class UserEmailRegisterSerializer(serializers.Serializer):
         user.set_password(password)
         user.save()
         # 发送邮箱激活邮件
-        # send_register_active_email(email)
+        send_register_active_email(email)
+        return user
+
+
+class EmailActiveSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, email):
+        """
+        验证邮箱
+        :param email:
+        :return:
+        """
+        # 验证邮箱是否合法
+        if not re.match(settings.REGEX_EMAIL, email):
+            raise serializers.ValidationError('邮箱无效')
+
+        # 邮箱是否注册
+        user = User.objects.filter(email=email)[0]
+        if user:
+            if user.is_active:
+                raise serializers.ValidationError('邮箱已激活')
+            else:
+                return email
+        else:
+            raise serializers.ValidationError('用户不存在')
+
+    def create(self, validated_data):
+        email = validated_data['email']
+        user = User.objects.get(email=email)
+        send_register_active_email(email)
         return user
 
 
@@ -159,27 +189,3 @@ class ResetPasswordSerializer(serializers.Serializer):
         user.set_password(send_reset_password_email(email))
         user.save()
         return user
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    # 获取当前用户
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-    username = serializers.ReadOnlyField(source='user.username')
-    post_title = serializers.ReadOnlyField(source='post.title')
-    # 只返回时间不提交
-    created_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M:%S')
-
-    class Meta:
-        model = Comment
-        fields = [
-            'id',
-            'user',
-            'username',
-            'post',
-            'post_title',
-            'text',
-            'created_time',
-            'parent',
-        ]

@@ -13,7 +13,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 
 from utils.email import send_register_active_email
 from .models import User, Comment
-from .serializers import UserDetailSerializer, UserEmailRegisterSerializer, CommentSerializer, ResetPasswordSerializer
+from .serializers import (UserDetailSerializer, UserEmailRegisterSerializer, CommentSerializer, ResetPasswordSerializer,
+                          EmailActiveSerializer)
 
 from utils.permissions import IsOwnerOrReadOnly
 
@@ -78,7 +79,7 @@ class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Upd
         # re_dict['name'] = user.username
 
         headers = self.get_success_headers(serializer.data)
-        return Response('激活邮件已发送到邮箱', status=status.HTTP_201_CREATED, headers=headers)
+        return Response('激活邮件已发送到邮箱,请在5分钟内激活账号', status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         return serializer.save()
@@ -127,22 +128,22 @@ class EmailActiveView(APIView):
         return Response('用户已激活', status=status.HTTP_200_OK)
 
 
-# 过期邮箱激活
-class ExpireEmailActiveView(APIView):
-    permission_classes = []
-    authentication_classes = []
+# 过期邮箱激活码
+class ExpireEmailActiveView(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    create:
+    注册激活码过期
+    重新发送邮箱激活码
+    """
+    queryset = User.objects.all()
+    serializer_class = EmailActiveSerializer
 
-    def post(self, request):
-        email = request.POST.get('email')
-        existed = User.objects.filter(email=email).count()
-        if existed:
-            if User.objects.filter(email=email)[0].is_active:
-                return Response('邮箱已激活', status=status.HTTP_400_BAD_REQUEST)
-            else:
-                send_register_active_email(email)
-                return Response('激活邮件已发送到你的邮箱,请在5分钟内激活账号', status=status.HTTP_200_OK)
-
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response('激活邮件已发送到邮箱,请在5分钟内激活账号', status=status.HTTP_201_CREATED, headers=headers)
 
 
 # 重置密码
@@ -162,19 +163,3 @@ class ResetPassWord(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
-
-
-# 评论
-class CommentViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    """
-    create:
-    发表评论
-    """
-    serializer_class = CommentSerializer
-    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication, ]
-
-    # 这里用了get_queryset来指定queryset 那么我们上面的query_set可以省略不写, 但是前提是在注册路由是需要加个base_name
-    def get_queryset(self):
-        # self.request.user 当前用户
-        return Comment.objects.filter(user=self.request.user)
