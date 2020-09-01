@@ -5,10 +5,14 @@ click==7.1.2
 coreapi==2.3.3
 coreschema==0.0.4
 Django==3.1
+django-cors-headers==3.5.0
 django-filter==2.3.0
+django-js-asset==1.2.2
 django-mdeditor==0.1.18
+django-simpleui==2020.7
 djangorestframework==3.11.1
 djangorestframework-jwt==1.11.0
+docopt==0.6.2
 Faker==4.1.1
 gunicorn==20.0.4
 h11==0.9.0
@@ -31,4 +35,5 @@ uritemplate==3.0.1
 urllib3==1.25.10
 uvicorn==0.11.8
 websockets==8.1
+yarg==0.1.9
 zipp==3.1.0
