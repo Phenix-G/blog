@@ -31,6 +31,7 @@ router.register(r'tags', TagViewSet, basename='tag')
 router.register(r'users', UserViewSet, basename='users')
 router.register(r'comments', CommentViewSet, basename='comment')
 router.register(r'password', ResetPassWord, basename='password')  # 重置密码
+router.register(r'email_active', ExpireEmailActiveView, basename='email_active')  # 重置密码
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,5 +40,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     re_path(r'^login/', obtain_jwt_token),
     re_path(r'^active/(?P<token>.*)$', EmailActiveView.as_view()),  # 用户激活
-    path('email_active/', ExpireEmailActiveView.as_view()),  # 邮箱过期激活
+    # path('email_active/', ExpireEmailActiveView.as_view()),  # 邮箱过期激活
 ]
