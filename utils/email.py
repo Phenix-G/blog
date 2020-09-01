@@ -28,9 +28,9 @@ def send_register_active_email(email):
     # 接收者的邮箱，是一个列表，这里是前端用户注册时传过来的 email
     receiver = [email]
     # html结构的信息，其中包含了加密后的用户信息token
-    html_message = '<a href=' + url + '>' + '点击激活' + '</a>'
+    html_message = '<a href=' + url + '>' + '欢迎注册Chris博客,点击激活博客账号' + '</a>'
     # 调用Django发送邮件的方法，这里传了5个参数
-    send_mail(subject=subject, message=message, from_email=sender, recipient_list=receiver)
+    send_mail(subject=subject, message=message, html_message=html_message, from_email=sender, recipient_list=receiver)
 
 
 def send_reset_password_email(email):
