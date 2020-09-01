@@ -6,7 +6,7 @@ def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myblog.settings")
     uvicorn.run(
         "myblog.asgi:application",
-        host="localhost",
+        host="0.0.0.0",
         port=8000,
         log_level="debug",
         reload=True,
