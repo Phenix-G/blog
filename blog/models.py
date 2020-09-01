@@ -46,5 +46,4 @@ class Post(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         self.excerpt = self.content.replace('`', '').replace('#', '').replace('+ ', '').replace('- ', '')[:60]
-        self.content = markdown(self.content)
         super().save()
