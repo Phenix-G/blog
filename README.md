@@ -43,12 +43,12 @@
 ## Project setup
 
 ### Python setup
-```
+```sh
 pip install -r requirements.txt
 ```
 
 #### Compiles and hot-reloads for development
-```
+```sh
 python manage.py runserver
 ```
 
@@ -58,11 +58,11 @@ python manage.py runserver
 ```
 
 ### Docker setup
-```
+```sh
 docker-compose build
 ```
 #### Compiles and hot-reloads for development
-```
+```sh
 docker-compose up
 ```
 #### Open browers  
@@ -74,7 +74,7 @@ docker-compose up
 See [Configuration Reference django](https://www.djangoproject.com/).
 See [Configuration Reference django rest framework](https://www.django-rest-framework.org/).
 
-```
+```sh
 部署：uvicorn myblog.asgi:application
 ```
 [![simpleui](https://img.shields.io/badge/developing%20with-Simpleui-2077ff.svg)](https://github.com/newpanjing/simpleui)
