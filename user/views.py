@@ -6,17 +6,16 @@ from rest_framework.views import APIView
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 
-from utils.email import send_register_active_email
-from .models import User, Comment
-from .serializers import (UserDetailSerializer, UserEmailRegisterSerializer, CommentSerializer, ResetPasswordSerializer,
-                          EmailActiveSerializer)
-
 from utils.permissions import IsOwnerOrReadOnly
+
+from .models import User
+from .serializers import (UserDetailSerializer, UserEmailRegisterSerializer, ResetPasswordSerializer,
+                          EmailActiveSerializer)
 
 
 class CustomBackend(ModelBackend):

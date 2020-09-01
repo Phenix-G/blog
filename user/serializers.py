@@ -1,17 +1,11 @@
 import re
-from abc import ABC
-from datetime import datetime, timedelta
 
-from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from itsdangerous import TimedJSONWebSignatureSerializer
 
-from blog.serializers import PostListSerializer, PostRetrieveSerializer
-from .models import User, Comment
-from blog.models import Post
 from utils.email import send_register_active_email, send_reset_password_email
+from .models import User
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
