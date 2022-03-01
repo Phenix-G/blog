@@ -1,4 +1,7 @@
+from django.core.mail import send_mail
 from rest_framework import serializers
+
+from utils.email import send_register_active_email
 
 from .models import User
 
@@ -24,13 +27,15 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         instance = User.objects.create_user(
             username=username, password=password, email=email
         )
+        send_register_active_email(email, username)
         return instance
 
     class Meta:
         model = User
         fields = ["username", "password", "confirm_password", "email"]
         extra_kwargs = {
-            "password": {"write_only": True, "style": {"input_type": "password"}}
+            "password": {"write_only": True, "style": {"input_type": "password"}},
+            "email": {"required": True},
         }
 
 

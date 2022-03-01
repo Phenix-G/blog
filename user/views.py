@@ -1,7 +1,14 @@
+import json
+from pprint import pprint
+
+import requests
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from .models import User
@@ -45,3 +52,46 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class UserActive(APIView):
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+        user.is_active = True
+        user.save()
+        return HttpResponseRedirect("https://github.com")
+
+
+class ThirdPartyLogin(GenericViewSet):
+    @action(detail=False, methods=["get"])
+    def github(self, request):
+        code = request.GET.get("code")
+        access_token = self.get_token(code)
+        data = self.get_user_info(access_token)
+        user = User.objects.create(username=data["username"], is_active=True)
+        return Response("success")
+
+    def get_token(self, code):
+        headers = {"Accept": "application/json"}
+        url = "https://github.com/login/oauth/access_token"
+        body = {
+            "client_id": "client_id",
+            "client_secret": "client_secret",
+            "code": code,
+        }
+        response = requests.post(url=url, data=body, headers=headers)
+        data = json.loads(response.text)
+        return data.get("access_token")
+
+    def get_user_info(self, token):
+        headers = {"Authorization": f"token {token}"}
+        url = "https://api.github.com/user"
+        response = requests.get(url=url, headers=headers)
+        data = json.loads(response.text)
+        re_dict = {
+            "username": data["login"],
+            "avatar": data["avatar_url"],
+            "email": data["email"],
+        }
+
+        return re_dict

@@ -22,10 +22,11 @@ from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from user.views import UserViewSet
+from user.views import ThirdPartyLogin, UserActive, UserViewSet
 
 router = DefaultRouter()
 router.register('user', UserViewSet, basename='user')
+router.register('accounts', ThirdPartyLogin, basename='accounts')
 
 
 schema_view = get_schema_view(
@@ -44,8 +45,10 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('active/<str:username>/', UserActive.as_view()),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
