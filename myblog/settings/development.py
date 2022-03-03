@@ -1,10 +1,7 @@
 from datetime import timedelta
 
-import environ
-
 from .base import *
 
-env = environ.Env()
 env.read_env(BASE_DIR / ".env.development")
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -55,8 +52,8 @@ EMAIL_HOST = 'smtp.163.com'  # 可以查看你使用那个服务，就是对应�
 EMAIL_PORT = 25  # 端口号固定
 
 # 发送邮件的邮箱
-EMAIL_HOST_USER = 'xxx@163.com'  # 你的邮箱名字
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # 你的邮箱名字
 # 邮箱中设置的客户端授权密码
-EMAIL_HOST_PASSWORD = 'EMAIL_HOST_PASSWORD'  # 你设置的授权码
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # 你设置的授权码
 # 收件人看到的发件人
-EMAIL_FROM = 'xxx<xxx@163.com>'
+EMAIL_FROM = env('EMAIL_FROM')
