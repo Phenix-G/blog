@@ -1,5 +1,4 @@
 import json
-from pprint import pprint
 
 import requests
 from django.http import HttpResponseRedirect
@@ -11,8 +10,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
+from myblog.settings.base import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+
 from .models import User
-from .serializers import UserDetailSerializer, UserRegisterSerializer
+from .serializers import (
+    TirdPartyLoginSerializer,
+    UserDetailSerializer,
+    UserRegisterSerializer,
+)
 
 
 class UserViewSet(GenericViewSet, CreateModelMixin):
@@ -63,20 +68,24 @@ class UserActive(APIView):
 
 
 class ThirdPartyLogin(GenericViewSet):
+    serializer_class = TirdPartyLoginSerializer
+
     @action(detail=False, methods=["get"])
     def github(self, request):
         code = request.GET.get("code")
         access_token = self.get_token(code)
         data = self.get_user_info(access_token)
-        user = User.objects.create(username=data["username"], is_active=True)
-        return Response("success")
+        user, created = User.objects.filter(username=data["username"]).get_or_create(
+            username=data["username"], is_active=True
+        )
+        return Response({'result': 'success'})
 
     def get_token(self, code):
         headers = {"Accept": "application/json"}
         url = "https://github.com/login/oauth/access_token"
         body = {
-            "client_id": "client_id",
-            "client_secret": "client_secret",
+            "client_id": GITHUB_CLIENT_ID,
+            "client_secret": GITHUB_CLIENT_SECRET,
             "code": code,
         }
         response = requests.post(url=url, data=body, headers=headers)
@@ -93,5 +102,4 @@ class ThirdPartyLogin(GenericViewSet):
             "avatar": data["avatar_url"],
             "email": data["email"],
         }
-
         return re_dict

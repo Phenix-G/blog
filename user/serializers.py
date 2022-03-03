@@ -1,4 +1,3 @@
-from django.core.mail import send_mail
 from rest_framework import serializers
 
 from utils.email import send_register_active_email
@@ -62,3 +61,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
             return instance
         else:
             raise serializers.ValidationError("密码不一致")
+
+
+class TirdPartyLoginSerializer(serializers.Serializer):
+    pass
