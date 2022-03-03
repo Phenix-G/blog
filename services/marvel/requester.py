@@ -4,6 +4,7 @@ import time
 import requests
 
 from .endpoint import Endpoint
+from .exceptions import BadInputException, MarvelException
 
 
 class Requester(Endpoint):
@@ -33,6 +34,21 @@ class Requester(Endpoint):
             url = "{}/{}".format(url, identifier)
         if sub_endpoint is not None:
             url = "{}/{}".format(url, sub_endpoint)
-        response = requests.get(url=url, params=self.get_query_with_authentication_params(kwargs))
+
+        response = requests.get(url, self.get_query_with_authentication_params(kwargs))
+        status = response.status_code
+
         data = response.json()
+        self.check_exception(status, data)
         return data
+
+    @staticmethod
+    def check_exception(status, data):
+        if status == 200:
+            pass
+        elif status == 409 or status == 401 or status == 405 or status == 403:
+            raise MarvelException("{}".format(data["message"]))
+        elif status == 404:
+            raise BadInputException("{}".format(data["message"]))
+        else:
+            raise Exception(data)

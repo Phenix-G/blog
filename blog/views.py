@@ -84,5 +84,5 @@ class MarvelView(APIView):
     #     return Response(data)
     def get(self, request):
         marvel = Marvel(Marvel_PRIVATE_KEY, Marvel_PUBLIC_KEY)
-        data = marvel.characters.get('1011334')
+        data = marvel.characters.stories("1011334")
         return Response(data)

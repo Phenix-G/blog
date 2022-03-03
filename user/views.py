@@ -78,7 +78,7 @@ class ThirdPartyLogin(GenericViewSet):
         user, created = User.objects.filter(username=data["username"]).get_or_create(
             username=data["username"], is_active=True
         )
-        return Response({'result': 'success'})
+        return Response({"result": "success"})
 
     def get_token(self, code):
         headers = {"Accept": "application/json"}
