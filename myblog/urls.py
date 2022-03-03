@@ -22,11 +22,15 @@ from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from blog.views import ArticleViewSet, CategoryViewSet, TagViewSet
 from user.views import ThirdPartyLogin, UserActive, UserViewSet
 
 router = DefaultRouter()
 router.register('user', UserViewSet, basename='user')
 router.register('accounts', ThirdPartyLogin, basename='accounts')
+router.register('article', ArticleViewSet, basename='article')
+router.register('category', CategoryViewSet, basename='category')
+router.register('tag', TagViewSet, basename='tag')
 
 
 schema_view = get_schema_view(
