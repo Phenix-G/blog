@@ -22,7 +22,7 @@ from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from blog.views import ArticleViewSet, CategoryViewSet, TagViewSet
+from blog.views import ArticleViewSet, CategoryViewSet, MarvelView, TagViewSet
 from user.views import ThirdPartyLogin, UserActive, UserViewSet
 
 router = DefaultRouter()
@@ -49,6 +49,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('marvel/', MarvelView.as_view()),
     path('active/<str:username>/', UserActive.as_view()),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
