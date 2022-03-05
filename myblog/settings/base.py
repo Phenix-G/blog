@@ -49,7 +49,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'blog',
     'user',
-    'config'
+    'config',
+    'marvel'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
