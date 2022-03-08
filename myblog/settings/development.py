@@ -57,3 +57,22 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # 你的邮箱名字
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # 你设置的授权码
 # 收件人看到的发件人
 EMAIL_FROM = env('EMAIL_FROM')
+
+
+# Celery settings
+# 配置celery时区，默认时UTC。
+if USE_TZ:
+    timezone = TIME_ZONE
+
+# celery配置redis作为broker。redis有16个数据库，编号0~15，这里使用第1个。
+broker_url = 'redis://127.0.0.1:6379/5'
+
+# 设置存储结果的后台
+result_backend = 'redis://127.0.0.1:6379/6'
+
+# 可接受的内容格式
+accept_content = ["json"]
+# 任务序列化数据格式
+task_serializer = "json"
+# 结果序列化数据格式
+result_serializer = "json"
