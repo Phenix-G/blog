@@ -43,7 +43,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'django_extensions',
-    'drf_yasg',
+    'drf_yasg'
 ]
 
 LOCAL_APPS = [
@@ -128,6 +128,22 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# redis
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SOCKET_CONNECT_TIMEOUT": 5,  # 建立连接超时设置
+            "SOCKET_TIMEOUT": 5,  # 连接建立后的读写操作超时设置
+        }
+    }
+}
+# 将 django-redis 作为 session 储存后端
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 
 # django rest framework
 REST_FRAMEWORK = {

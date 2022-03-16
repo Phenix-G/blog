@@ -125,6 +125,9 @@ class Character(
 ):
     name = models.CharField("角色名字", max_length=20)
 
+    def __str__(self):
+        return self.name
+
 
 class Comics(
     MarvelModel,
