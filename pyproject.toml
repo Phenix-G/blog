@@ -6,7 +6,7 @@ authors = ["Phenix <eiphenixg@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-Django = "3.2"
+Django = "3.2.17"
 djangorestframework = "^3.13.1"
 mysqlclient = "^2.1.0"
 django-environ = "^0.8.1"
